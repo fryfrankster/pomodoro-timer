@@ -6,12 +6,24 @@ let timeRemaining = focusMinutes * 60;
 
 let intervalID;
 
+const hideStartButton = () => {
+    document.getElementById("startButton").hidden = true;
+    document.getElementById("stopButton").hidden = false;
+}
+
+const hideStopButton = () => {
+    document.getElementById("startButton").hidden = false;
+    document.getElementById("stopButton").hidden = true;
+}
+
 const onStartButtonClicked = () => {
     intervalID = setInterval(updateTimeRemaining, 1000);
+    hideStartButton();
 }
 
 const onStopButtonClicked = () => {
     clearInterval(intervalID);
+    hideStopButton();
 }
 
 const onResetButtonClicked = () => {
