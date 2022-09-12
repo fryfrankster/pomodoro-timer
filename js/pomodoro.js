@@ -1,4 +1,4 @@
-const focusMinutes = 1;
+const focusMinutes = 25;
 const shortBreakMinutes = 5;
 const longBreakMinutes = 15;
 
@@ -8,11 +8,10 @@ const workingStatuses = {
     "longBreak": longBreakMinutes
 }
 
-const workStatus = "focus";
-const statusMinutes = workingStatuses[workStatus];
-
+let workStatus = "focus";
+let statusMinutes = workingStatuses[workStatus];
 let timeRemaining = statusMinutes * 60;
-
+let pomodoros = 0;
 let intervalID;
 
 const hideStartButton = () => {
@@ -28,6 +27,7 @@ const hideStopButton = () => {
 const onStartButtonClicked = () => {
     intervalID = setInterval(updateTimeRemaining, 1000);
     hideStartButton();
+    console.log(workStatus);
 }
 
 const onStopButtonClicked = () => {
@@ -39,23 +39,42 @@ const onResetButtonClicked = () => {
     clearInterval(intervalID);
     document.getElementById("timeRemaining").innerHTML = `${statusMinutes}:00`;
     timeRemaining = statusMinutes * 60;
+    hideStopButton();
 }
 
 const updateTimeRemaining = () => {
-    const minutes = Math.floor(timeRemaining / 60);
-    let seconds = timeRemaining % 60;
-
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-
-    document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
     timeRemaining--;
+    const { minutes, seconds } = formatTime(timeRemaining);
+    document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
     isTimeFinished();
 }
 
 const isTimeFinished = () => {
-    if (timeRemaining <= 0) {
-        document.getElementById("timeRemaining").innerHTML = "time expired";
+    if (timeRemaining < 0) {
+        if (workStatus === "focus") {
+            pomodoros++;
+            workStatus = pomodoros % 4 === 0 ? "longBreak" : "shortBreak";
+        } else {
+            workStatus = "focus";
+        }
+        statusMinutes = workingStatuses[workStatus];
+        timeRemaining = statusMinutes * 60;
+        const { minutes, seconds } = formatTime(timeRemaining);
+
+        hideStopButton();
+        
+        document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
         clearInterval(intervalID);
+    }
+}
+
+const formatTime = (time) => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    return {
+        "minutes": minutes,
+        "seconds": seconds
     }
 }
 
