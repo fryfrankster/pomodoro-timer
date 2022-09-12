@@ -1,8 +1,17 @@
-const focusMinutes = 25;
+const focusMinutes = 1;
 const shortBreakMinutes = 5;
 const longBreakMinutes = 15;
 
-let timeRemaining = focusMinutes * 60;
+const workingStatuses = { 
+    "focus" : focusMinutes,
+    "shortBreak" : shortBreakMinutes,
+    "longBreak": longBreakMinutes
+}
+
+const workStatus = "focus";
+const statusMinutes = workingStatuses[workStatus];
+
+let timeRemaining = statusMinutes * 60;
 
 let intervalID;
 
@@ -28,11 +37,11 @@ const onStopButtonClicked = () => {
 
 const onResetButtonClicked = () => {
     clearInterval(intervalID);
-    document.getElementById("timeRemaining").innerHTML = `${focusMinutes}:00`;
-    timeRemaining = focusMinutes * 60;
+    document.getElementById("timeRemaining").innerHTML = `${statusMinutes}:00`;
+    timeRemaining = statusMinutes * 60;
 }
 
-function updateTimeRemaining() {
+const updateTimeRemaining = () => {
     const minutes = Math.floor(timeRemaining / 60);
     let seconds = timeRemaining % 60;
 
@@ -40,4 +49,14 @@ function updateTimeRemaining() {
 
     document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
     timeRemaining--;
+    isTimeFinished();
 }
+
+const isTimeFinished = () => {
+    if (timeRemaining <= 0) {
+        document.getElementById("timeRemaining").innerHTML = "time expired";
+        clearInterval(intervalID);
+    }
+}
+
+document.getElementById("stopButton").hidden = true;
