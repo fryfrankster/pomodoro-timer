@@ -9,11 +9,13 @@
     <link rel="stylesheet" type="text/css" href="./css/styles.css" />
 </head>
 <body>
-    <div>
-        <p id="timeRemaining">25:00</p>
-        <button id="startButton" onclick="onStartButtonClicked()">Start</button>
-        <button id="stopButton" onclick="onStopButtonClicked()">Stop</button>
-        <button id="resetButton" onclick="onResetButtonClicked()">Reset</button>
+    <div id="wrapper">
+        <h1 id="time-remaining"></h1>
+        <div id="buttons">
+            <button id="start-button" onclick="onStartButtonClicked()">Start</button>
+            <button id="stop-button" onclick="onStopButtonClicked()">Stop</button>
+            <button id="reset-button" onclick="onResetButtonClicked()">Reset</button>
+        </div>
     </div>
 </body>
 </html>

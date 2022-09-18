@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Roboto:wght@300&display=swap');
+
+:root {
+    --focusBackgroundColor: #eb4949;
+    --fontColor: #fff;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--fontColor);
+    background-color: var(--focusBackgroundColor);
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+button {
+    color: var(--fontColor);
+    background: rgba(0, 0, 0, 0);
+    border: solid 2px #fff;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#time-remaining {
+    font-size: 100px;    
+}
+
+#wrapper {
+    display: grid;
+    place-items: center;
+}
+

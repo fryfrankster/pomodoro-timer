@@ -3,9 +3,9 @@ const shortBreakMinutes = 5;
 const longBreakMinutes = 15;
 
 const workingStatuses = { 
-    "focus" : focusMinutes,
-    "shortBreak" : shortBreakMinutes,
-    "longBreak": longBreakMinutes
+    focus: focusMinutes,
+    shortBreak: shortBreakMinutes,
+    longBreak: longBreakMinutes
 }
 
 let workStatus = "focus";
@@ -14,20 +14,25 @@ let timeRemaining = statusMinutes * 60;
 let pomodoros = 0;
 let intervalID;
 
+const stopButton = document.getElementById("stop-button");
+const startButton = document.getElementById("start-button");
+const timeRemainingEl = document.getElementById("time-remaining");
+
+stopButton.hidden = true;
+
 const hideStartButton = () => {
-    document.getElementById("startButton").hidden = true;
-    document.getElementById("stopButton").hidden = false;
+    startButton.hidden = true;
+    stopButton.hidden = false;
 }
 
 const hideStopButton = () => {
-    document.getElementById("startButton").hidden = false;
-    document.getElementById("stopButton").hidden = true;
+    startButton.hidden = false;
+    stopButton.hidden = true;
 }
 
 const onStartButtonClicked = () => {
     intervalID = setInterval(updateTimeRemaining, 1000);
     hideStartButton();
-    console.log(workStatus);
 }
 
 const onStopButtonClicked = () => {
@@ -37,7 +42,7 @@ const onStopButtonClicked = () => {
 
 const onResetButtonClicked = () => {
     clearInterval(intervalID);
-    document.getElementById("timeRemaining").innerHTML = `${statusMinutes}:00`;
+    timeRemainingEl.innerText = `${statusMinutes}:00`;
     timeRemaining = statusMinutes * 60;
     hideStopButton();
 }
@@ -45,37 +50,54 @@ const onResetButtonClicked = () => {
 const updateTimeRemaining = () => {
     timeRemaining--;
     const { minutes, seconds } = formatTime(timeRemaining);
-    document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
-    isTimeFinished();
+    timeRemainingEl.innerText = `${minutes}:${seconds}`;
+    if (timeRemaining < 0) {
+        updateWorkStatus()
+    }
 }
 
-const isTimeFinished = () => {
-    if (timeRemaining < 0) {
-        if (workStatus === "focus") {
-            pomodoros++;
-            workStatus = pomodoros % 4 === 0 ? "longBreak" : "shortBreak";
-        } else {
-            workStatus = "focus";
-        }
-        statusMinutes = workingStatuses[workStatus];
-        timeRemaining = statusMinutes * 60;
-        const { minutes, seconds } = formatTime(timeRemaining);
-
-        hideStopButton();
-        
-        document.getElementById("timeRemaining").innerHTML = `${minutes}:${seconds}`;
-        clearInterval(intervalID);
+const updateWorkStatus = () => {
+    if (workStatus === "focus") {
+        pomodoros++;
+        workStatus = pomodoros % 4 === 0 ? "longBreak" : "shortBreak";
+    } else {
+        workStatus = "focus";
     }
+
+    updateBackground();
+
+    statusMinutes = workingStatuses[workStatus];
+    timeRemaining = statusMinutes * 60;
+    const { minutes, seconds } = formatTime(timeRemaining);
+
+    hideStopButton();
+    
+    timeRemainingEl.innerText = `${minutes}:${seconds}`;
+    clearInterval(intervalID);
+}
+
+const updateBackground = () => {
+    let backgroundColor;
+        switch (workStatus) {
+            case "focus":
+                backgroundColor = "red";
+                break
+            case "shortBreak":
+                backgroundColor = "orange";
+                break
+            case "longBreak":
+                backgroundColor = "blue";
+                break
+        }
+    document.body.style.backgroundColor = backgroundColor;
 }
 
 const formatTime = (time) => {
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;
-    return {
-        "minutes": minutes,
-        "seconds": seconds
-    }
+    return { minutes, seconds };
 }
 
-document.getElementById("stopButton").hidden = true;
+const {minutes, seconds} = formatTime(timeRemaining);
+timeRemainingEl.innerText = `${minutes}:${seconds}`;
