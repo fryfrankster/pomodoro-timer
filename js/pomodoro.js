@@ -89,7 +89,7 @@ const updateBackground = () => {
                 backgroundColor = "blue";
                 break
         }
-    document.body.style.backgroundColor = backgroundColor;
+    document.documentElement.style.setProperty("--background-color", backgroundColor);
 }
 
 const formatTime = (time) => {
